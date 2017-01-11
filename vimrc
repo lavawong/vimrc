@@ -19,6 +19,120 @@ endif
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
+" filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+filetype off                  " required
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+Plugin 'tpope/vim-fugitive'
+" plugin from http://vim-scripts.org/vim/scripts.html
+Plugin 'L9'
+" Git plugin not hosted on GitHub
+" Plugin 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (i.e. when working on your own plugin)
+" Plugin 'file:///home/gmarik/path/to/plugin'
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" Install L9 and avoid a Naming conflict if you've already installed a
+" different version somewhere else.
+" Plugin 'ascenator/L9', {'name': 'newL9'}
+
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'syntastic'
+Plugin 'nerdtree'
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+
+let g:airline_theme='dark'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+" unicode symbols
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
+
+"""""""""""""""""""""""""""
+" Git-gutter configuration
+"""""""""""""""""""""""""""
+
+let g:gitgutter_updatetime = 750
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+
+
+"""""""""""""""""""""""""""
+" Syntastic configuration
+"""""""""""""""""""""""""""
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+
+"""""""""""""""""""""""""""""
+" NERDTree configuration
+"""""""""""""""""""""""""""""
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+map <C-n> :NERDTreeToggle<CR>
+
+"""""""""""""""""""""""""""""
+" Show Space and TAB 
+" http://askubuntu.com/questions/74485/how-to-display-hidden-characters-in-vim
+"""""""""""""""""""""""""""""
+set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:␣
+
+" so that syntastic uses .jshintrc files if present - http://stackoverflow.com/questions/28573553/how-can-i-make-syntastic-load-a-different-checker-based-on-existance-of-files-in
+autocmd FileType javascript let b:syntastic_checkers = findfile('.jshintrc', '.;') != '' ? ['jshint'] : ['standard']
+
+" execute pathogen#infect()
+
+set wildignore=.git/**,log/**,node_modules/**,target/**,tmp/**,*.rbc
+set wildmenu                 
+                      " show a navigable menu for tab completion
+set wildmode=longest,list,full
+
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 set nobackup
@@ -40,10 +154,10 @@ set autochdir
 set autoindent
 set number
 set ls=2
-set statusline=%4*%<\ %1*[%F]
-set statusline+=%4*\ %5*[%{&fileencoding}, " encoding
-set statusline+=%{&fileformat}%{\"\".((exists(\"+bomb\")\ &&\ &bomb)?\",BOM\":\"\").\"\"}]%m
-set statusline+=%4*%=\ %6*%y%4*\ [POS=%4*%l,%3*%c]\ \<PER=%2*%P%4*\>
+" set statusline=%4*%<\ %1*[%F]
+" set statusline+=%4*\ %5*[%{&fileencoding}, " encoding
+" set statusline+=%{&fileformat}%{\"\".((exists(\"+bomb\")\ &&\ &bomb)?\",BOM\":\"\").\"\"}]%m
+" set statusline+=%4*%=\ %6*%y%4*\ [POS=%4*%l,%3*%c]\ \<PER=%2*%P%4*\>
 set encoding=utf-8
 let &termencoding=&encoding
 set paste
@@ -51,9 +165,7 @@ autocmd FileType py,c,cpp,java set shiftwidth=4 | set expandtab
 autocmd BufNewFile,BufRead *.node set filetype=javascript
 set langmenu=zh_CN.UTF-8
 set fileencodings=utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
-syntax enable
-syntax on
-colorscheme mustang
+" colorscheme mustang
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
 
@@ -69,10 +181,9 @@ set mouse=a
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
+syntax enable
 syntax on
 set hlsearch
-endif
 
 if &diff
     " diff mode
@@ -126,3 +237,6 @@ nmap <C-j> mz:m+<cr>`z
 nmap <C-k> mz:m-2<cr>`z
 vmap <C-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <C-k> :m'<-2<cr>`>my`<mzgv`yo`z
+
+let g:investigate_command_for_python = '/usr/bin/zeal ^s'
+:nnoremap gz :!zeal "<cword>"&<CR><CR>
